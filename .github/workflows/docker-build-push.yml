@@ -30,8 +30,8 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      - name: Build and push frontend
-        uses: docker/build-push-action@v5
+      - name: set up QEMU
+        uses: docker/setup-qemu-action@v3
         with:
           context: ./frontend
           push: true
