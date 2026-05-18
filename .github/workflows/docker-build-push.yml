@@ -1,3 +1,4 @@
+
 name: Build and Push Docker Images
 
 on:
@@ -34,6 +35,7 @@ jobs:
         with:
           context: ./frontend
           push: true
+          platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ steps.vars.outputs.sha_short }}
@@ -43,6 +45,7 @@ jobs:
         with:
           context: ./backend
           push: true
+          platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ steps.vars.outputs.sha_short }}
@@ -52,6 +55,7 @@ jobs:
         with:
           context: ./nginx
           push: true
+          platforms: linux/arm64
           tags: |
             ${{ secrets.DOCKERHUB_USERNAME }}/nginx:latest
             ${{ secrets.DOCKERHUB_USERNAME }}/nginx:${{ steps.vars.outputs.sha_short }}
@@ -77,5 +81,6 @@ jobs:
           sed -i "s|YOUR_DOCKERHUB_USERNAME|$DOCKER_USER|g" docker-compose.yml
           sed -i "s|YOUR_SHA|$SHA|g" docker-compose.yml
 
+          docker-compose down || true
           docker-compose pull
-          docker-compose up -d
+          docker-compose up -d --force-recreate
